@@ -1,4 +1,4 @@
-const chalk = require("chalk")
+const chalk = require("chalk") // importando file para trabalhar cores em textos
 
 const nota = 9
 
