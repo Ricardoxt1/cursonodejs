@@ -15,7 +15,7 @@ const server = http.createServer(function (req,res) {
         })
     } else {
         fs.writeFile('arquivo.txt', name, function (err, data) {
-            res.writeHead(302, {
+            res.writeHead(302, { //302 é status de redirect 
                 Location: '/',
             })
             return res.end()
