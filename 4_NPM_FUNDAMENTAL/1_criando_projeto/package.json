@@ -1,0 +1,19 @@
+{
+  "name": "meu_projeto",
+  "version": "1.0.0",
+  "description": "Meu primeiro projeto de npm",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Ricardoxt1/CursoNodejs.git"
+  },
+  "author": "Ricardo Alexandre",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ricardoxt1/CursoNodejs/issues"
+  },
+  "homepage": "https://github.com/Ricardoxt1/CursoNodejs#readme"
+}
