@@ -6,6 +6,7 @@ const inquirer = require('inquirer')
 // modulos internos - cor modules
 
 const fs = require('fs')
+const { constant, functionsIn } = require('lodash')
 
 operation()
 
@@ -62,6 +63,7 @@ function buildAccount(){
         {
             name: 'accountName',
             message: 'Digite um nome para sua conta: '
+            
         }
     ]).then(anwser => {    //console.info serve para realizar login pelo nome da conta criada
         const accountName = anwser['accountName'];
@@ -87,7 +89,7 @@ function buildAccount(){
             console.log(err)
         })    
 
-        console.log(chalk.green('Parabéns, sua conta foi criada!'))
+        console.log(grchalk.een('Parabéns, sua conta foi criada!'))
         operation()
     })
     .catch(err => console.log(err))
@@ -101,6 +103,7 @@ function deposit(){
             name: 'accountName',
             message: 'Qual o nome da sua conta?'
         }
+    ])
         .then((anwser) => {
             const accountName = anwser['accountName'];
 
@@ -108,9 +111,23 @@ function deposit(){
             if(!checkAccount(accountName)) {
                 return deposit()
             }
+
+            inquirer.prompt([
+                {
+                    name: 'amount',   //amount significa valor
+                    message: 'Qual valor pretende depositar?'
+                }
+            ]).then((anwser) => {
+
+                const amount = anwser['amount'];
+
+                addAmount(accountName, amount)
+                operation()
+
+            })
+            .catch((err) => console.log(err)) 
         })
-        .catch(err => console.log(err))
-    ])
+        .catch(err => console.log(err))  
 }
 
 
@@ -121,4 +138,35 @@ function checkAccount(accountName){
     }
 
     return true
+}
+
+function addAmount(accountName, amount) {
+
+    const accountData = getAccount(accountName)
+    
+    if(!amount){
+        console.log(chalk.bgRed.black('Ocorreu um erro, tente novamente mais tarde!'))
+        return deposit()  
+    }
+
+    accountData.balance = parseFloat(amount) + parseFloat(accountData.balance)
+
+    fs.writeFileSync(
+        `accounts/${accountName}.json`,
+        JSON.stringify(accountData),
+        function (erro) {
+            console.log(erro)
+        },
+    )
+
+    console.log(chalk.green(`Olá ${accountName}, foi depositado o valor de R$${amount} na sua conta!`))
+}
+
+function getAccount(accountName) {
+    const accountJSON = fs.readFileSync(`accounts/${accountName}.json`, {
+        encoding: 'utf8',
+        flag: 'r'
+    })
+
+    return JSON.parse(accountJSON)
 }
