@@ -34,14 +34,13 @@ function operation() {
         if (action === 'Criar Contas') {
             createAccount()
         } else if (action === 'Consultar Saldo') {
-
+            getAccountBalance()
         } else if (action === 'Depositar') {
             deposit()
-
         } else if (action === 'Sacar') {
-
+            withdraw()
         } else if (action === 'Sair') {
-            console.log(chalk.bgBlue.black('Obrigado por utilizar o banco Account, voltei sempre!'))
+            console.log(chalk.bgBlue.black('Obrigado por utilizar o banco Account, volte sempre!'))
             process.exit()
         }
     }) 
@@ -169,4 +168,32 @@ function getAccount(accountName) {
     })
 
     return JSON.parse(accountJSON)
+}
+
+// show accountDataBalance
+
+function getAccountBalance() {
+    inquirer.prompt ([
+        {
+            name: 'accountName',
+            message: 'Qual nome da sua conta?',
+        },
+    ])
+    .then((answer) => {
+
+        const accountName = answer['accountName']
+
+        //verify accountName
+
+        if(!checkAccount(accountName)) {
+            return getAccountBalance() 
+        }
+
+        const accountData = getAccount(accountName)
+
+        console.log(chalk.bgBlue.black(`Olá, o saldo da sua conta é de R$${accountData.balance}`)),
+
+        operation()
+
+    }).catch(erro => console.log(erro))
 }
