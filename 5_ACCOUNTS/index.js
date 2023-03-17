@@ -197,3 +197,65 @@ function getAccountBalance() {
 
     }).catch(erro => console.log(erro))
 }
+
+// withdraw an amount from user account
+function withdraw (){
+
+    inquirer.prompt([
+        {
+            name: 'accountName',
+            message: 'Qual o nome da sua conta?'
+        }
+    ]).then((anwser) => {
+
+        const accountName = anwser['accountName']
+
+        if(!checkAccount(accountName)) {
+            withdraw()
+        }
+
+        inquirer.prompt([
+            {
+                name: 'amount',
+                message: 'Quantos você deseja sacar?'
+            }
+        ]).then((anwser) => {
+
+            const amount = anwser['amount']
+
+            removeAmount(accountName, amount)
+            
+        }).catch(err => console.log(err))
+
+    }).catch(err => console.log(err))
+}
+
+function removeAmount(accountName, amount) {
+    const accountData = getAccount(accountName)
+
+    if(!amount) {
+        console.log(chalk.bgRed.black('Ocorreu um erro, tente novamente mais tarde!'))
+        return withdraw()
+    }
+
+    if(accountData.balance < amount){
+        console.log(chalk.bgRed.black('Valor indisponível!'))
+        return withdraw()
+    }
+
+    accountData.balance = parseFloat(accountData.balance) - parseFloat(amount)
+
+    fs.writeFileSync(
+        `accounts/${accountName}.json`,
+        JSON.stringify(accountData),
+        function (err) {
+            console.log(err)
+        }
+    )
+
+    console.log(chalk.green(`Foi realizado um saque no valor de R$${amount} da sua conta!`))
+    operation()
+}
+
+
+
